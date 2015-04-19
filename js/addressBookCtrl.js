@@ -2,7 +2,7 @@ function addressBookCtrl($scope,$localStorage,$filter) {
 
     $scope.criteria = "";
 
-    $scope.matchesCriteria = function () {
+    $scope.notSearching = function () {
         // don't show book alphabet headings if text searching
         if(!$scope.criteria.length) {
             return true;

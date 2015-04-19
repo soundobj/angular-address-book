@@ -21,7 +21,7 @@
             <label for="criteria">Search</label>
             <input type='text' id="criteria" ng-model="criteria" class="form-control"/>
                 <div ng-repeat="(letter,addresses) in $storage.addresses">
-                    <h4 data-ng-show="matchesCriteria()">{{letter}}</h4>
+                    <h4 data-ng-show="notSearching()">{{letter}}</h4>
                     <section class="member" ng-repeat="address in addresses | filter:{surname:criteria} | orderBy:'surname'">
                         <a href ng-click="displayEntry(address)">{{address.name}}</a>
                     </section>
