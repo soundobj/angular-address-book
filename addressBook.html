@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Angular Address Book</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-overrides.css">
+</head>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+<script src="https://rawgithub.com/gsklee/ngStorage/master/ngStorage.js"></script>
+<script src="js/addressBookCtrl.js"></script>
+
+<script>var app = angular.module('app',['ngStorage']);</script>
+<body ng-app='app'>
+<div class="container" ng-controller="addressBookCtrl">
+    <div class="row">
+
+        <div class="col-md-6 pull-left form-group">
+            <label for="criteria">Search</label>
+            <input type='text' id="criteria" ng-model="criteria" class="form-control"/>
+                <div ng-repeat="(letter,addresses) in $storage.addresses">
+                    <h4 data-ng-show="matchesCriteria()">{{letter}}</h4>
+                    <section class="member" ng-repeat="address in addresses | filter:{surname:criteria} | orderBy:'surname'">
+                        <a href ng-click="displayEntry(address)">{{address.name}}</a>
+                    </section>
+                </div>
+        </div>
+
+        <div class="col-md-6 pull-left">
+            <form name="addressBook" ng-submit="submitForm()" novalidate>
+
+                <div ng-class="{ 'has-error' : addressBook.name.$invalid && !addressBook.name.$pristine }">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" class="form-control" ng-model="addressEntry.name" ng-pattern="onlyWords" required>
+                    <p ng-show="addressBook.name.$error.pattern" class="help-block">Name must not contain numbers!</p>
+                    <p ng-show="addressBook.name.$invalid && !addressBook.name.$pristine" class="help-block">Name is required.</p>
+                </div>
+
+                <div>
+                    <label>Phone:</label>
+                    <div ng-repeat="phone in addressEntry.phones"
+                         ng-class="{ 'has-error' : phoneForm.phone.$invalid && !phoneForm.phone.$pristine }"
+                         class="row">
+
+                        <ng-form name="phoneForm">
+                            <div class="col-md-3">
+                                <select ng-model="$parent.addressEntry.selectedPhones[$index]"
+                                        ng-options="i.id as i.name for i in $parent.phoneTypes"
+                                        class="form-control">
+                                </select>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" name="phone" ng-model="phone[$index]" ng-pattern="onlyDigits" class="form-control">
+                                <p ng-show="phoneForm.phone.$error.pattern" class="help-block">Phone must only contain digits!</p>
+                            </div>
+                        </ng-form>
+
+                    </div>
+                    <button type="button" ng-click="addNewPhone()" class="btn btn-default">+ Add phone</button>
+                </div>
+                <div>
+                    <label>Email:</label>
+                    <div ng-repeat="email in addressEntry.emails"
+                         ng-class="{ 'has-error' : emailForm.email.$invalid && !emailForm.email.$pristine }"
+                         class="row">
+
+                        <ng-form name="emailForm">
+                            <div class="col-md-3">
+                                <select ng-model="$parent.addressEntry.selectedEmails[$index]"
+                                        ng-options="i.id as i.name for i in $parent.emailTypes"
+                                        class="form-control">
+                                </select>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="email" name="email" ng-model="email[$index]" class="form-control">
+                                <p ng-show="emailForm.email.$error.email" class="help-block">Email must be valid!</p>
+                            </div>
+                        </ng-form>
+                </div>
+
+                <button type="button" ng-click="addNewEmail()" class="btn btn-default">+ Add email</button>
+                </div>
+                <div class="form-group pull-right">
+                    <button ng-click="resetAddressEntry()" class="btn btn-default">Reset</button>
+                    <button type="submit" class="btn btn-primary" ng-disabled="addressBook.$invalid">Save</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>
