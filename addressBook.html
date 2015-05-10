@@ -6,13 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Angular Address Book</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/bootstrap-overrides.css">
+    <link rel="stylesheet" href="public/css/rechannel.css">
 </head>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
 <script src="https://rawgithub.com/gsklee/ngStorage/master/ngStorage.js"></script>
-<script src="js/addressBookCtrl.js"></script>
+<script src="src/addressBookCtrl.js"></script>
+<script src="src/formElement.js"></script>
 
-<script>var app = angular.module('app',['ngStorage']);</script>
+<script>var app = angular.module('app',['ngStorage']);
+
+
+app.directive('selectForm', [selectForm]);
+
+
+</script>
 <body ng-app='app'>
 <div class="container" ng-controller="addressBookCtrl">
     <div class="row">
@@ -43,6 +50,10 @@
                     <div ng-repeat="phone in addressEntry.phones"
                          ng-class="{ 'has-error' : phoneForm.phone.$invalid && !phoneForm.phone.$pristine }"
                          class="row">
+
+                        <select-form types="$parent.phoneTypes"
+                                     model="$parent.addressEntry.selectedPhones[$index]">
+                        </select-form>
 
                         <ng-form name="phoneForm">
                             <div class="col-md-3">
